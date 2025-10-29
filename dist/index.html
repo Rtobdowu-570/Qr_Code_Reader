@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator & Scanner</title>
+    <link rel="stylesheet" href="qr.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Code Hub</h1>
+            <p>Generate and scan QR codes with ease</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active">Generate</button>
+            <button class="tab-button">Scan</button>
+        </div>
+
+        <div id="generate" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">Generate QR Code</h2>
+                
+                <div class="alert-error-message" id="generateError">
+                    <div class="error-icon">!</div>
+                    <span id="ErrorText"></span>
+                </div>
+
+                <div class="alert-success-message" id="generateSuccess">
+                    <div class="success-icon">✓</div>
+                    <span id="SuccessText"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="qrInput">Enter Text or URL</label>
+                    <textarea id="qrInput" placeholder="Enter the text or URL you want to convert to a QR code..."></textarea>
+                    <p class="info-text">Maximum 2953 characters</p>
+                </div>
+
+                <div class="form-group">
+                    <label>QR Code Preview</label>
+                    <div class="preview-area">
+                        <div class="qr-code-display" id="qr-preview">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" id="generateBtn">Generate QR Code</button>
+                    <button class="btn-secondary" id="downloadBtn">Download</button>
+                    <button class="btn-secondary" id="clearGenerate">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Tab -->
+        <div id="scan" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Scan QR Code</h2>
+
+                <div class="alert-error-message" id="scanError">
+                    <div class="error-icon">!</div>
+                    <span id="scanErrorText"></span>
+                </div>
+
+                <div class="alert-success-message" id="scanSuccess">
+                    <div class="success-icon">✓</div>
+                    <span id ="scanSuccessText"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload QR Code Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="qrFile" accept="image/*">
+                        <label for="qrFile" class="file-input-label">
+                            📁 Click to upload or drag and drop
+                        </label>
+                    </div>
+                    <p class="info-text">Supported formats: PNG, JPG, GIF, WebP</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Scanned Result</label>
+                    <textarea id="scanResult" placeholder="Decoded QR code content will appear here..." readonly></textarea>
+                    <div id="reader" style="width: 100%; max-width: 500px; margin: 0 auto;"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" id="scanBtn">Scan QR Code</button>
+                    <button class="btn-secondary" id="resultBtn">Copy Result</button>
+                    <button class="btn-secondary" id="clearScan">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</body>
+</html>
