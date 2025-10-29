@@ -182,8 +182,30 @@ class QrCodeGenerator {
             })
             .catch(err => {
                 UI.alert_msg('scan-error', `Failed to scan QR code: ${err}`, 'error');
+
+                 // Try alternative method
+                tryImageDataUrl(file);
             });
     }
+
+    tryImageDataUrl(file) {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+        const imageDataUrl = e.target.result;
+        
+        html5QrCode.scanFileV2(imageDataUrl, true)
+            .then(decodedText => {
+                scanResult.value = decodedText;
+                UI.alert_msg('scan-success', 'QR Code scanned successfully!', 'success');
+            })
+            .catch(err => {
+                UI.alert_msg('scan-error', `Failed to scan QR code: ${err}`, 'error');
+            });
+    };
+    
+    reader.readAsDataURL(file);
+}
 
     scanCamera() {
         if (this.scanner) {
