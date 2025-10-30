@@ -166,62 +166,47 @@ class QrCodeGenerator {
 
 
     // Scan QR code from uploaded file
-     scanFile(file) {
-        if (!file) {
-            UI.alert_msg('scan-error', 'Please select a file first', 'error');
-            return;
-        }
-
-        const html5QrCode = new Html5Qrcode("reader");
-        const scanResult = document.getElementById('scanResult');
-
-        html5QrCode.scanFile(file, true)
-            .then(decodedText => {
-                scanResult.value = decodedText;
-                UI.alert_msg('scan-success', 'QR Code scanned successfully!', 'success');
-            })
-            .catch(err => {
-                UI.alert_msg('scan-error', `Failed to scan QR code: ${err}`, 'error');
-
-                 // Try alternative method
-                tryImageDataUrl(file);
-            });
+scanFile(file) {
+    if (!file) {
+        UI.alert_msg('scan-error', 'Please select a file first', 'error');
+        return;
     }
 
-    tryImageDataUrl(file) {
-    const reader = new FileReader();
-    
-    reader.onload = (e) => {
-        const imageDataUrl = e.target.result;
-        
-        html5QrCode.scanFileV2(imageDataUrl, true)
-            .then(decodedText => {
-                scanResult.value = decodedText;
-                UI.alert_msg('scan-success', 'QR Code scanned successfully!', 'success');
-            })
-            .catch(err => {
-                UI.alert_msg('scan-error', `Failed to scan QR code: ${err}`, 'error');
-            });
-    };
-    
-    reader.readAsDataURL(file);
+    const html5QrCode = new Html5Qrcode("reader");
+    const scanResult = document.getElementById('scanResult');
+
+    html5QrCode.scanFile(file, true)
+        .then(decodedText => {
+            scanResult.value = decodedText;
+            UI.alert_msg('scan-success', 'QR Code scanned successfully!', 'success');
+        })
+        .catch(err => {
+            console.error('Failed to scan QR code:', err);
+            UI.alert_msg('scan-error', 'Unable to decode this QR image. Try a clearer image.', 'error');
+        });
 }
 
+    // Scan QR code using camera
     scanCamera() {
         if (this.scanner) {
             this.scanner.stop();
         }
 
-        this.scanner = new Html5Qrcode("reader", { fps: 10, qrbox: 250 });
+        const options = {
+            fps: window.innerWidth > 800 ? 25 : 10, qrbox: 250
+        };
+
+        this.scanner = new Html5Qrcode("reader", options);
         const scanResult = document.getElementById('scanResult');
 
         this.scanner.start(
             { facingMode: "environment" },
             {
                 successCallback: (decodedText) => {
-                    scanResult.textContent = decodedText;
+                    scanResult.value = decodedText;
                     UI.copyToClipboard(decodedText);
                     UI.alert_msg('scan-success', 'QR Code data copied to clipboard!', 'success');
+                    this.stopScanning();
                 },
                 errorCallback: (errorMessage) => {
                     UI.alert_msg('scan-error', 'Scanning error: ' + errorMessage, 'error');
